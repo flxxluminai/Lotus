@@ -10,6 +10,7 @@ using UnityEngine.Android;
 using UnityEngine.iOS;
 #endif
 
+/*
 public class Permissions : MonoBehaviour
 {
     GameObject dialog = null;
@@ -51,3 +52,4 @@ public class Permissions : MonoBehaviour
 #endif
     }
 }
+*/
