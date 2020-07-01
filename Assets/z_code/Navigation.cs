@@ -16,8 +16,8 @@ public class Navigation : MonoBehaviour
         SceneManager.LoadScene(name, LoadSceneMode.Additive);
     }
 
-    public void pageUnload(string name)
+    public void pageUnload()
     {
-        SceneManager.UnloadSceneAsync(name);
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 }
