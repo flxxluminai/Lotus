@@ -10,6 +10,7 @@ public class AccountCreation : MonoBehaviour
     private static int lastLengthDOB = 0;
     private static int lastLengthPhone = 0;
     private DatabaseReference database;
+    private FirebaseUser user;
 
     public void Start()
     {
@@ -98,24 +99,26 @@ public class AccountCreation : MonoBehaviour
         }
         else
         {
-            bool complete = Authorization.user.SendEmailVerificationAsync().IsCompleted;
+            user = FirebaseAuth.DefaultInstance.CurrentUser;
+            user.SendEmailVerificationAsync().ContinueWith(task => 
+            { 
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    error.text = "** Unable to send verification email. Please try again later **";
+                }
+                else
+                {
+                    string emailTemp = email.text.ToString();
+                    emailTemp = emailTemp.Replace('.', ' ');
+                    database.Child("users").Child(emailTemp).Child("name").SetValueAsync(name.text.ToString());
+                    database.Child("users").Child(emailTemp).Child("DOB").SetValueAsync(DOB.text.ToString());
+                    database.Child("users").Child(emailTemp).Child("phone").SetValueAsync(phone.text.ToString());
+                    database.Child("users").Child(emailTemp).Child("section").SetValueAsync(section.text.ToString());
+                    SceneManager.LoadScene("Login", LoadSceneMode.Single);
+                }
+            });
 
-            if (complete)
-            {
-                string emailTemp = email.text.ToString();
-                emailTemp = emailTemp.Replace('.', ' ');
-                database.Child("users").Child(emailTemp).Child("name").SetValueAsync(name.text.ToString());
-                database.Child("users").Child(emailTemp).Child("DOB").SetValueAsync(DOB.text.ToString());
-                database.Child("users").Child(emailTemp).Child("phone").SetValueAsync(phone.text.ToString());
-                database.Child("users").Child(emailTemp).Child("section").SetValueAsync(section.text.ToString());
-
-                SceneManager.LoadScene("Login", LoadSceneMode.Single);
-            }
-            else
-            {
-                error.text = "** Unable to send verification email. Please try again later **";
-                SceneManager.LoadScene("Login", LoadSceneMode.Single);
-            }
+            
         }
 
         

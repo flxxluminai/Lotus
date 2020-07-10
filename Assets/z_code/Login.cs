@@ -30,7 +30,7 @@ public class Login : MonoBehaviour
                 error.text = "** Please verify your email before signing in **";
                 break;
             default:
-                SceneManager.LoadScene("Home", LoadSceneMode.Single);
+                SceneManager.LoadScene("Navigation", LoadSceneMode.Single);
                 break;
         }
     }

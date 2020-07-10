@@ -1,4 +1,6 @@
-﻿using Firebase.Database;
+﻿using System;
+
+using Firebase.Database;
 using Firebase.Auth;
 
 public class Person
@@ -14,19 +16,20 @@ public class Person
         this.email = email;
         this.phone = phone;
         this.clearance = clearance;
-        this.database = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(email.Replace('.', ' '));
+        this.database = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(this.email.Replace('.', ' '));
     }
 
     public void changeEmail(string newEmail)
     {
-        email = newEmail;
-        database = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(email.Replace('.', ' '));
         user.UpdateEmailAsync(newEmail).ContinueWith(task => 
         {
             if (task.IsCanceled || task.IsFaulted)
                 return;
 
+            database = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(newEmail.Replace('.', ' '));
             updateDatabase();
+            deleteProfile(email);
+            email = newEmail;
         });
     }
 
@@ -41,5 +44,10 @@ public class Person
         database.Child("DOB").SetValueAsync(DOB);
         database.Child("phone").SetValueAsync(phone);
         database.Child("clearance").SetValueAsync(clearance);
+    }
+
+    public static void deleteProfile(string email)
+    {
+        FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(email).RemoveValueAsync();
     }
 }

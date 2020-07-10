@@ -4,7 +4,7 @@ using Firebase.Auth;
 public class Authorization : MonoBehaviour
 {
     private static FirebaseAuth auth;
-    public static FirebaseUser user;
+    private FirebaseUser user;
 
     public void Start()
     {
@@ -41,19 +41,6 @@ public class Authorization : MonoBehaviour
     public bool createAccount(string email, string password)
     {
         auth = FirebaseAuth.DefaultInstance;
-        /*
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
-        {
-            if (task.IsCanceled || task.IsFaulted)
-            {
-                failed = true;
-                return;
-            }
-
-            user = task.Result;
-        }).RunSynchronously();
-        */
-
         user = auth.CreateUserWithEmailAndPasswordAsync(email, password).Result;
 
         return (user == null);
