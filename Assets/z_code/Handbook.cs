@@ -84,4 +84,15 @@ public class Handbook : MonoBehaviour
             signature.text = userSnapshot.Child(req.Key).Value.ToString();
         }
     }
+
+    public static void initializeEmptyBook(DatabaseReference data)
+    {
+        data.Child("Scout").Child("year").SetValueAsync(0);
+        data.Child("Tenderfoot").Child("year").SetValueAsync(0);
+        data.Child("Second Class").Child("year").SetValueAsync(0);
+        data.Child("First Class").Child("year").SetValueAsync(0);
+        data.Child("Star").Child("year").SetValueAsync(0);
+        data.Child("Life").Child("year").SetValueAsync(0);
+        data.Child("Eagle").Child("year").SetValueAsync(0);
+    }
 }

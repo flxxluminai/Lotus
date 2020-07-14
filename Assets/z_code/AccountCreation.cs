@@ -7,16 +7,18 @@ using System.Text.RegularExpressions;
 
 public class AccountCreation : MonoBehaviour
 {
-    private static int lastLengthDOB = 0;
-    private static int lastLengthPhone = 0;
+    InputField DOB;
     private DatabaseReference database;
     private FirebaseUser user;
 
     public void Start()
     {
-        //lastLengthDOB = 0;
-        //lastLengthPhone = 0;
         database = FirebaseDatabase.DefaultInstance.RootReference;
+
+        DOB = GameObject.Find("date of birth").GetComponent<InputField>();
+        DOB.onValueChanged.AddListener(delegate { formatDOB(); });
+
+
     }
 
     public void cancelCreation()
@@ -26,33 +28,27 @@ public class AccountCreation : MonoBehaviour
 
     public void formatDOB()
     {
-        Text DOB = GameObject.Find("DOB text").GetComponent<Text>();
-        string t = DOB.text.ToString();
-        if (lastLengthDOB < t.Length)
+        switch (DOB.text.Length)
         {
-            if (t.Length == 2)
-                DOB.text = t + '/';
-            else if (t.Length == 5)
-                DOB.text = t + '/';
+            case 2:
+                DOB.text += "/";
+                break;
+            case 5:
+                DOB.text += "/";
+                break;
+            default:
+                break;
         }
-        else
-        {
-            if (t.Length == 3)
-                DOB.text = t.Substring(0, 2);
-            else if (t.Length == 6)
-                DOB.text = t.Substring(0, 5);
-        }
-
-        lastLengthDOB = t.Length;
     }
 
     public void validateDOB()
     {
-        InputField DOB = GameObject.Find("date of birth").GetComponent<InputField>();
+        
     }
 
     public void formatPhone(Text phone)
     {
+        /*
         string text = phone.text.ToString();
         if (lastLengthPhone < text.Length)
         {
@@ -61,6 +57,7 @@ public class AccountCreation : MonoBehaviour
             else if (text.Length == 8)
                 phone.text = text + '-';
         }
+        */
     }
 
     public void validatePassword()
@@ -114,6 +111,9 @@ public class AccountCreation : MonoBehaviour
                     database.Child("users").Child(emailTemp).Child("DOB").SetValueAsync(DOB.text.ToString());
                     database.Child("users").Child(emailTemp).Child("phone").SetValueAsync(phone.text.ToString());
                     database.Child("users").Child(emailTemp).Child("section").SetValueAsync(section.text.ToString());
+
+                    if (section.text.ToString() == "Boys")
+                        Handbook.initializeEmptyBook(database.Child("users").Child(emailTemp).Child("handbook"));
                     SceneManager.LoadScene("Login", LoadSceneMode.Single);
                 }
             });
