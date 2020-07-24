@@ -8,9 +8,9 @@ using Firebase.Auth;
 
 public class Handbook : MonoBehaviour
 {
+    private FirebaseUser user;
     private DatabaseReference database;
     private DatabaseReference userDatabase;
-    private FirebaseUser user;
     private DataSnapshot userSnapshot;
     private DataSnapshot dataSnapshot;
     private string sceneName;
@@ -20,29 +20,10 @@ public class Handbook : MonoBehaviour
     {
         sceneName = SceneManager.GetActiveScene().ToString(); 
         database = FirebaseDatabase.DefaultInstance.RootReference.Child("handbook").Child(sceneName);
-        user = FirebaseAuth.DefaultInstance.CurrentUser;
-        userDatabase = FirebaseDatabase.DefaultInstance.RootReference.Child("accounts").Child(user.Email.Replace(".", " "))
-            .Child("handbook").Child(sceneName);
+        userDatabase = Navigation.userDatabase.Child("handbook").Child(sceneName);
 
-        bool flag = false;
-        userDatabase.GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsFaulted || task.IsCanceled)
-                return;
-            else
-            {
-                userSnapshot = task.Result;
-                if ((int) userSnapshot.Child("year").Value == 0)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    database = database.Child(userSnapshot.Child("year").Value.ToString());
-                }
-            }
-        });
-        if (flag)
+        userSnapshot = Navigation.userSnapshot.Child("handbook").Child(sceneName);
+        if ((int)userSnapshot.Child("year").Value == 0)
         {
             dataSnapshot = database.OrderByKey().LimitToLast(1).GetValueAsync().Result;
             userDatabase.Child("requirements").SetValueAsync(dataSnapshot.Children);
@@ -57,6 +38,7 @@ public class Handbook : MonoBehaviour
         }
         else
         {
+            database = database.Child(userSnapshot.Child("year").Value.ToString());
             dataSnapshot = database.GetValueAsync().Result;
         }
         
@@ -65,23 +47,23 @@ public class Handbook : MonoBehaviour
 
     void loadRequirements()
     {
-        Image model = GameObject.Find("Model").GetComponent<Image>();
-        int items = 0;
+        Text model = GameObject.Find("DescripText").GetComponent<Text>();
+
+        Vector3 position = new Vector3(194, 32, 0);
         foreach (DataSnapshot req in dataSnapshot.Children)
         {
-            items++;
-            Vector3 position = new Vector3(50, 40+(items*1300), 0);
-            Image copy = Image.Instantiate(model);
+            Text copy = Text.Instantiate(model);
             copy.transform.position = position;
 
-            Text reqNum = copy.transform.Find("Text").GetComponent<Text>();
+            Text reqNum = copy.transform.Find("ReqText").GetComponent<Text>();
             reqNum.text = req.Key;
 
-            Text description = copy.transform.Find("Description").transform.Find("Text").GetComponent<Text>();
-            description.text = req.Value.ToString();
+            model.text = req.Value.ToString();
 
-            Text signature = copy.transform.Find("Signature").transform.Find("Text").GetComponent<Text>();
+            Text signature = copy.transform.Find("SignatureText").transform.Find("Text").GetComponent<Text>();
             signature.text = userSnapshot.Child(req.Key).Value.ToString();
+
+            position = new Vector3(194, copy.rectTransform.offsetMin.y, 0);
         }
     }
 

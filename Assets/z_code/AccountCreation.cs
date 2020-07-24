@@ -17,8 +17,8 @@ public class AccountCreation : MonoBehaviour
     private InputField phone;
     private int lastLengthPhone;
 
-    private DatabaseReference database;
     private FirebaseUser user;
+    private DatabaseReference database;
 
     public void Start()
     { 
@@ -73,35 +73,41 @@ public class AccountCreation : MonoBehaviour
     {
         int[] daysAmount = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         string[] parts = DOB.text.Split('/');
-
-        int year = 0;
-        int.TryParse(parts[2], out year);
-        if (year < 1900 || year >= DateTime.UtcNow.Year)
+        if (parts.Length != 3)
         {
             setError(0, "Invalid date of birth");
-            return;
         }
-
-        if (year % 4 == 0)
-            daysAmount[1] = 29;
-
-        int month = 0; 
-        int.TryParse(parts[0], out month);
-        if (month <= 0 || month > 12)
+        else
         {
-            setError(0, "Invalid date of birth");
-            return;
-        }
+            int year = 0;
+            int.TryParse(parts[2], out year);
+            if (year < 1900 || year >= DateTime.UtcNow.Year)
+            {
+                setError(0, "Invalid date of birth");
+                return;
+            }
 
-        int day = 0;
-        int.TryParse(parts[1], out day);
-        if (day <= 0 || day > daysAmount[month-1])
-        {
-            setError(0, "Invalid date of birth");
-            return;
-        }
+            if (year % 4 == 0)
+                daysAmount[1] = 29;
 
-        setError(0, "");
+            int month = 0;
+            int.TryParse(parts[0], out month);
+            if (month <= 0 || month > 12)
+            {
+                setError(0, "Invalid date of birth");
+                return;
+            }
+
+            int day = 0;
+            int.TryParse(parts[1], out day);
+            if (day <= 0 || day > daysAmount[month - 1])
+            {
+                setError(0, "Invalid date of birth");
+                return;
+            }
+
+            setError(0, "");
+        }
     }
 
     public void formatPhone()
@@ -203,7 +209,7 @@ public class AccountCreation : MonoBehaviour
                     }
                     else
                     {
-                        string id = Person.createID(firstName.text, middleName.text, lastName.text, DOB.text);
+                        string id = user.UserId;
                         database.Child("users").Child(id).Child("name").SetValueAsync(firstName.text.ToString());
                         database.Child("users").Child(id).Child("DOB").SetValueAsync(DOB.text.ToString());
                         database.Child("users").Child(id).Child("phone").SetValueAsync(phone.text.ToString());
@@ -212,6 +218,8 @@ public class AccountCreation : MonoBehaviour
                         if (section.text.ToString() == "Boys")
                             Handbook.initializeEmptyBook(database.Child("users").Child(id).Child("handbook"));
                         SceneManager.LoadScene("Login", LoadSceneMode.Single);
+
+                        
                     }
                 });
 
