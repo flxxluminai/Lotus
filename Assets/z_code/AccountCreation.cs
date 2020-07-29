@@ -210,7 +210,9 @@ public class AccountCreation : MonoBehaviour
                     else
                     {
                         string id = user.UserId;
-                        database.Child("users").Child(id).Child("name").SetValueAsync(firstName.text.ToString());
+                        database.Child("users").Child(id).Child("firstName").SetValueAsync(firstName.text.ToString());
+                        database.Child("users").Child(id).Child("middleName").SetValueAsync(middleName.text.ToString());
+                        database.Child("users").Child(id).Child("lastName").SetValueAsync(lastName.text.ToString());
                         database.Child("users").Child(id).Child("DOB").SetValueAsync(DOB.text.ToString());
                         database.Child("users").Child(id).Child("phone").SetValueAsync(phone.text.ToString());
                         database.Child("users").Child(id).Child("section").SetValueAsync(section.text.ToString());

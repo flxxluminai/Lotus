@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if PLATFORM_ANDROID
+#if UNITY_ANDROID
 using UnityEngine.Android;
 #endif
 
-#if PLATFORM_IOS
+#if UNITY_IOS
 using UnityEngine.iOS;
 #endif
 
-/*
 public class Permissions : MonoBehaviour
 {
     GameObject dialog = null;
@@ -18,7 +17,12 @@ public class Permissions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-#if PLATFORM_ANDROID
+
+    }
+
+    void askPermission()
+    {
+#if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera) ||
             !Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead) ||
             !Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
@@ -30,26 +34,13 @@ public class Permissions : MonoBehaviour
         }
 #endif
 
-#if PLATFORM_IOS
 
-#endif
-    }
-
-    void OnGUI ()
-    {
-#if PLATFORM_ANDROID
-        if (!Permission.HasUserAuthorizedPermission(Permission.Camera) ||
-            !Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead) ||
-            !Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+#if UNITY_IOS
+        if (!Application.HasUserAuthorization(UserAuthorization.WebCam))
         {
-            Application.Quit();
-            return;
-        }
-        else if (dialog != null)
-        {
-            Destroy(dialog);
+            Application.RequestUserAuthorization(UserAuthorization.WebCam);
         }
 #endif
     }
 }
-*/
+
