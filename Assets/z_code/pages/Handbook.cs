@@ -1,25 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Firebase.Database;
-using Firebase.Auth;
 
 public class Handbook : MonoBehaviour
 {
-    private FirebaseUser user;
-    private DatabaseReference database;
+    public static DataSnapshot dataSnapshot;
+
     private DatabaseReference userDatabase;
     private DataSnapshot userSnapshot;
-    private DataSnapshot dataSnapshot;
-    private string sceneName;
 
     // Start is called before the first frame update
     void Start()
     {
-        sceneName = SceneManager.GetActiveScene().ToString(); 
-        database = FirebaseDatabase.DefaultInstance.RootReference.Child("handbook").Child(sceneName);
+        string sceneName = SceneManager.GetActiveScene().ToString(); 
+        DatabaseReference database = FirebaseDatabase.DefaultInstance.RootReference.Child("handbook").Child(sceneName);
         userDatabase = Navigation.userDatabase.Child("handbook").Child(sceneName);
 
         userSnapshot = Navigation.userSnapshot.Child("handbook").Child(sceneName);

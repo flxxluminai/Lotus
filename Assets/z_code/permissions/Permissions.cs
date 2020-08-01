@@ -34,7 +34,7 @@ public class Permissions : MonoBehaviour
         }
 #endif
 
-
+        
 #if UNITY_IOS
         if (!Application.HasUserAuthorization(UserAuthorization.WebCam))
         {

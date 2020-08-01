@@ -6,6 +6,8 @@ using Firebase.Database;
 
 public class Announcements : MonoBehaviour
 {
+    public static DataSnapshot snapshot;
+
     private DatabaseReference database;
 
     public void Start()
@@ -24,7 +26,7 @@ public class Announcements : MonoBehaviour
             else if (task.IsCompleted)
             {
                 RectTransform scrollView = GameObject.Find("Scroll View").GetComponent<RectTransform>();
-                DataSnapshot snapshot = task.Result;
+                snapshot = task.Result;
                 IEnumerable<DataSnapshot> values = snapshot.Children;
                 GameObject item = GameObject.Find("Content Template").GetComponent<GameObject>();
                 GameObject end = GameObject.Find("Ending").GetComponent<GameObject>();
