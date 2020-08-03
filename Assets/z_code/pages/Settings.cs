@@ -5,7 +5,13 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public static bool[] settings = { };
+    public static bool[] settings = { }; /* Index:
+                                          *     0: push notifications
+                                          *     1: email notifications
+                                          *     2: camera usage
+                                          *     3: mobile data usage
+                                          *     4: offline data sync
+                                          */
 
     Toggle[] toggles = { };
 

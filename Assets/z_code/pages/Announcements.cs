@@ -6,8 +6,7 @@ using Firebase.Database;
 
 public class Announcements : MonoBehaviour
 {
-    public static DataSnapshot snapshot;
-
+    private DataSnapshot snapshot;
     private DatabaseReference database;
 
     public void Start()

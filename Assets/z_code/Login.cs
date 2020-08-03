@@ -19,7 +19,15 @@ public class Login : MonoBehaviour
 
     public void verify()
     {
-        if (user != null)
+        Save save = new Save();
+        save.loadData();
+        Connection connection = new Connection();
+        if (!Settings.settings[4] && connection.checkConnected())
+        {
+            Text error = GameObject.Find("Error").GetComponent<Text>();
+            error.text = "** Offline sync is not enabled and there is not Internet connection **";
+        }
+        else if (user != null)
         {
             SceneManager.LoadScene("Navigation", LoadSceneMode.Single);
         }
@@ -44,6 +52,12 @@ public class Login : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void loadOfflineSync()
+    {
+        Save save = new Save();
+        save.loadData();
     }
 
     public void accountCreation()

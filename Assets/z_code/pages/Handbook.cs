@@ -5,8 +5,7 @@ using Firebase.Database;
 
 public class Handbook : MonoBehaviour
 {
-    public static DataSnapshot dataSnapshot;
-
+    private DataSnapshot dataSnapshot;
     private DatabaseReference userDatabase;
     private DataSnapshot userSnapshot;
 

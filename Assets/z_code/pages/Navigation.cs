@@ -15,6 +15,8 @@ public class Navigation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(Settings.settings[4]);
+
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         userDatabase = FirebaseDatabase.DefaultInstance.RootReference.Child("accounts").Child(user.UserId);
         userSnapshot = userDatabase.GetValueAsync().Result;
