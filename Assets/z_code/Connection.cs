@@ -1,18 +1,30 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System;
+using UnityEngine.Networking;
 using UnityEngine;
-
-using Firebase.Database;
 
 public class Connection
 {
+    private const string siteURL = "https://christophervuhoang.wixsite.com/hoalu";
+    private const string urlProfiles = siteURL + "/_functions-dev/profiles";
+    private const string announcements = siteURL + "/_functions/announcements";
+
     /*
-     * Check if connected to internet
+     * Check if connected to internet 
      */
     public bool checkConnected()
     {
-        DatabaseReference database = FirebaseDatabase.DefaultInstance.GetReference(".info/connected");
-        return (bool) database.GetValueAsync().Result.Value;
+        UnityWebRequest request = new UnityWebRequest(urlProfiles);
+        if (request.isHttpError || request.isNetworkError)
+        {
+            Debug.Log("no connection");
+            return false;
+        }
+        else
+        {
+            Debug.Log("connection");
+            return true;
+        }
     }
 
     /*
@@ -39,5 +51,21 @@ public class Connection
         {
             return 0;
         }
+    }
+
+    public IEnumerator getData()
+    {
+        UnityWebRequest request = new UnityWebRequest(urlProfiles);
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+            Debug.Log(request.error);
+        else
+        {
+            Debug.Log(request.downloadHandler.text);
+        }
+        
     }
 }

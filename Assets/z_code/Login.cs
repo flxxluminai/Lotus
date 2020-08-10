@@ -12,6 +12,10 @@ public class Login : MonoBehaviour
 
     public void Start()
     {
+        Connection connection = new Connection();
+        connection.checkConnected();
+        StartCoroutine(connection.getData());
+
         failedCounter = 0;
         auth = new Authorization();
         user = FirebaseAuth.DefaultInstance.CurrentUser;
@@ -22,7 +26,7 @@ public class Login : MonoBehaviour
         Save save = new Save();
         save.loadData();
         Connection connection = new Connection();
-        if (!Settings.settings[4] && connection.checkConnected())
+        if (!Settings.settings[4] && !connection.checkConnected())
         {
             Text error = GameObject.Find("Error").GetComponent<Text>();
             error.text = "** Offline sync is not enabled and there is not Internet connection **";
@@ -54,14 +58,27 @@ public class Login : MonoBehaviour
         }
     }
 
-    private void loadOfflineSync()
+    public void resetPassword()
     {
-        Save save = new Save();
-        save.loadData();
+        Connection connection = new Connection();
+        if (connection.checkConnected())
+            SceneManager.LoadScene("Password Reset Request", LoadSceneMode.Single);
+        else
+        {
+            Text error = GameObject.Find("Error").GetComponent<Text>();
+            error.text = "** Need Internet connection to reset password **";
+        }
     }
 
     public void accountCreation()
     {
-        SceneManager.LoadScene("Account_Creation", LoadSceneMode.Single);
+        Connection connection = new Connection();
+        if (connection.checkConnected())
+            SceneManager.LoadScene("Account_Creation", LoadSceneMode.Single);
+        else
+        {
+            Text error = GameObject.Find("Error").GetComponent<Text>();
+            error.text = "** Need Internet connection to create account **";
+        }
     }
 }

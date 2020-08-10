@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public static bool[] settings = { }; /* Index:
-                                          *     0: push notifications
-                                          *     1: email notifications
-                                          *     2: camera usage
-                                          *     3: mobile data usage
-                                          *     4: offline data sync
-                                          */
+    public static bool[] settings = {true, true, false, false, false};   /* Index:
+                                                                          *     0: push notifications
+                                                                          *     1: email notifications
+                                                                          *     2: camera usage
+                                                                          *     3: mobile data usage
+                                                                          *     4: offline data sync
+                                                                          */
 
     Toggle[] toggles = { };
 
@@ -29,15 +29,6 @@ public class Settings : MonoBehaviour
 
     private void loadToggle()
     {
-        if (settings.Length != 5)
-        {
-            settings[0] = true;
-            settings[1] = true;
-            settings[2] = false;
-            settings[3] = false;
-            settings[4] = false;
-        }
-        
         for (int i = 0; i < toggles.Length; i++)
         {
             toggles[i].isOn = settings[i];
