@@ -194,6 +194,7 @@ public class AccountCreation : MonoBehaviour
             InputField password = GameObject.Find("password").GetComponent<InputField>();
             Text section = GameObject.Find("choice").GetComponent<Text>();
 
+            /*
             if (!auth.createAccount(email.text, password.text))
             {
                 error.text = "** Unable to create account **";
@@ -227,7 +228,7 @@ public class AccountCreation : MonoBehaviour
                 });
 
 
-            }
+            }*/
         }
     }
 }

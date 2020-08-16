@@ -6,15 +6,26 @@ using UnityEngine;
 public class Connection
 {
     private const string siteURL = "https://christophervuhoang.wixsite.com/hoalu";
-    private const string urlProfiles = siteURL + "/_functions-dev/profiles";
-    private const string announcements = siteURL + "/_functions/announcements";
+
+    private string functionName;
+    public JSONObject json;
+
+    public Connection()
+    {
+        this.functionName = "";
+    }
+
+    public Connection(string functionName)
+    {
+        this.functionName = functionName;
+    }
 
     /*
      * Check if connected to internet 
      */
     public bool checkConnected()
     {
-        UnityWebRequest request = new UnityWebRequest(urlProfiles);
+        UnityWebRequest request = new UnityWebRequest(siteURL);
         if (request.isHttpError || request.isNetworkError)
         {
             Debug.Log("no connection");
@@ -53,9 +64,18 @@ public class Connection
         }
     }
 
-    public IEnumerator getData()
+    /*
+     * Gets data from http request
+     * Afterwards, completes action (function) 
+     */
+    public IEnumerator getData(string query, Action action = null)
     {
-        UnityWebRequest request = new UnityWebRequest(urlProfiles);
+        UnityWebRequest request;
+        if (query.Length > 0)
+            request = new UnityWebRequest(siteURL + "/_functions-dev/" + functionName + "?" + query);
+        else
+            request = new UnityWebRequest(siteURL + "/_functions-dev/" + functionName);
+
         request.downloadHandler = new DownloadHandlerBuffer();
 
         yield return request.SendWebRequest();
@@ -64,7 +84,13 @@ public class Connection
             Debug.Log(request.error);
         else
         {
-            Debug.Log(request.downloadHandler.text);
+            json = JSONObject.Create(request.downloadHandler.text);
+            Debug.Log(json.Print(true));
+        }
+
+        if (action != null)
+        {
+            action();
         }
         
     }

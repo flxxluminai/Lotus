@@ -8,6 +8,7 @@ using Firebase.Auth;
 
 public class Profile : MonoBehaviour
 {
+    public static JSONObject json;
     FirebaseUser user;
 
     Text error;
@@ -215,6 +216,7 @@ public class Profile : MonoBehaviour
 
     public void savePassword()
     {
+        /*
         Authorization auth = new Authorization();
         if (auth.authorizeSignIn(user.Email, oldPassword.text) == 2)
         {
@@ -232,6 +234,7 @@ public class Profile : MonoBehaviour
         {
             error.text = "** Invalid Old Password **";
         }
+        */
     }
     
 }

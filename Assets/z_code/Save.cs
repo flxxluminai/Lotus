@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class Save
 {
     bool[] settings = { };
+    JSONObject json = JSONObject.Create();
 
     private Save createSave()
     {
         Save save = new Save();
         save.settings = Settings.settings;
+        json.AddField("announcements", Announcements.json);
+        json.AddField("profile", Profile.json);
+        json.AddField("last login", System.DateTime.Now.ToLongDateString());
+
         return save;
     }
 
@@ -30,5 +32,7 @@ public class Save
         Save save = JsonUtility.FromJson<Save>(jsonData);
 
         Settings.settings = save.settings;
+        Announcements.json = save.json["announcements"];
+        Profile.json = save.json["profile"];
     }
 }
